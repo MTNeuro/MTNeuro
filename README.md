@@ -2,8 +2,8 @@
 ![dataset](assets/dataset.png)
 
 ## Links 
-*[Website](https://mtneuro.github.io/)
-*[Bossdb Page](https://bossdb.org/project/prasad2020)
+* [Website](https://mtneuro.github.io/)
+* [Bossdb Page](https://bossdb.org/project/prasad2020)
 
 ## Overview 
 
