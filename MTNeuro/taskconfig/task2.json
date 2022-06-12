@@ -1,0 +1,28 @@
+{
+    "name": "task2",
+    "image_chan": "bossdb://prasad/prasad2020/image", 
+    "annotation_chan": "bossdb://prasad/prasad_analysis/pixel_labels",
+    "xrange_cor": [4600,4856],
+    "yrange_cor": [900,1156],
+    "zrange": [110,471],
+
+    "xrange_stri": [3700,3956],
+    "yrange_stri": [500,756],
+
+    "xrange_vp": [3063,3319],
+    "yrange_vp": [850,1106],
+
+    "xrange_zi": [1543,1799],
+    "yrange_zi": [650,906],
+
+    "z_train": [110, 379],
+    "z_val": [380, 409],    
+    "z_test": [420, 470],
+    "volume_z": 1,
+
+    "tile_size": [256,256],
+    
+    "task_type": "normal",
+    "combine_ax_and_bg": 0,
+    "noZI": 0
+}
