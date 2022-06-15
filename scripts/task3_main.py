@@ -17,15 +17,8 @@ from sklearn import preprocessing
 from sklearn.decomposition import PCA
 import argparse
 
-'''This script takes in an encoder file path and computes R2 scores between embeddings and different Semantic features as part of of Task 3'''
-
-'SET : provide trained encoder path'
-encoder_file_path = ''
-
-'SET:  encoder type either ssl, supervised, PCA or NMF'
-encoder_type = 'ssl'
-
 def task3_semantic_features(encoder_file_path,encoder_type):
+'''This script takes in an encoder file path and computes R2 scores between embeddings and different Semantic features as part of of Task 3'''
     if encoder_type == 'ssl':
         ssl_encoder = 1
         unsupervised = 0
