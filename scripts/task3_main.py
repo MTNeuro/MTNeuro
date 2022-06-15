@@ -33,10 +33,10 @@ elif encoder_type == 'supervised':
     unsupervised = 0
 elif encoder_type == 'PCA' 
     unsupervised = 1
-    pca = 1
+    set_pca = 1
 elif encoder_type == 'NMF'
     unsupervised = 1
-    pca = 0
+    set_pca = 0
 else:
     print("Incorrectly specified encoder type")
 
@@ -85,8 +85,7 @@ stats_blood = extract_blood_stats(np.copy(data_array_anno))
 if encoder_type == 'ssl' or encoder_type == 'supervised'
     embeddings = get_latents(data_array_raw,encoder_file_path,ssl_encoder)
 elif encoder_type == 'unsupervised'
-     if pca == 1:
-     	
+    embeddings = get_unsup_latents(data_array_raw,set_pca)
 
 
 
