@@ -12,8 +12,7 @@ from sklearn.decomposition import PCA, NMF
 
 
 def get_latents(cut_out_data,encoder_file_path,ssl=1):
-'''getting latents for provided encoder data
-ssl flag for ssl model. ssl = 0 for supervised model'''
+    '''getting latents for provided encoder data ssl flag for ssl model. ssl = 0 for supervised model'''
     test_file = cut_out_data
     dataset_test = BrainRegionDatasetInfer(cut_out_data, train = False, edge_prob = 0)
     test_transform = transforms.xray.get_xray_transform([], 'xray')

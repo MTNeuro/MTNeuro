@@ -3,7 +3,7 @@ from intern.resource.boss.resource import *
 
 
 def get_cutout_data(xrange, yrange, zrange, name='region', save=True):
-'''fetching both raw images as well as annotated data for cutout data ranges'''
+    '''fetching both raw images as well as annotated data for cutout data ranges'''
 
     connection_params={
         'protocol': 'https',

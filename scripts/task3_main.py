@@ -17,24 +17,18 @@ from sklearn import preprocessing
 from sklearn.decomposition import PCA
 import argparse
 
-def task3_semantic_features(str encoder_file_path,str encoder_type):
-'''This script takes in an encoder file path and computes R2 scores between embeddings and different Semantic features as part of of Task 3. 
-Script requires encoder type that can take values of 
-"ssl" : supervised encoder
-"supervised": supervised encoder
-"NMF": Non negative matrix factorization
-"PCA: PCA  
-'''
+def task3_semantic_features(encoder_file_path,encoder_type):
+#'''This script takes in an encoder file path and computes R2 scores between embeddings and different Semantic features as part of of Task 3.  Script requires encoder type that can take values of  ssl" : supervised encoder . supervised": supervised encoder .  Non negative matrix factorization'''
     if encoder_type == 'ssl':
         ssl_encoder = 1
         unsupervised = 0
     elif encoder_type == 'supervised':
         ssl_encoder =  0
         unsupervised = 0
-    elif encoder_type == 'PCA' 
+    elif encoder_type == 'PCA': 
         unsupervised = 1
         set_pca = 1
-    elif encoder_type == 'NMF'
+    elif encoder_type == 'NMF':
         unsupervised = 1
         set_pca = 0
     else:
@@ -82,9 +76,9 @@ Script requires encoder type that can take values of
 
 
     'get results for different encoders'
-    if encoder_type == 'ssl' or encoder_type == 'supervised'
+    if encoder_type == 'ssl' or encoder_type == 'supervised':
         embeddings = get_latents(data_array_raw,encoder_file_path,ssl_encoder)
-    elif encoder_type == 'unsupervised'
+    elif encoder_type == 'unsupervised':
         embeddings = get_unsup_latents(data_array_raw,set_pca)
 
 
