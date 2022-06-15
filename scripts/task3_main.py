@@ -17,8 +17,14 @@ from sklearn import preprocessing
 from sklearn.decomposition import PCA
 import argparse
 
-def task3_semantic_features(encoder_file_path,encoder_type):
-'''This script takes in an encoder file path and computes R2 scores between embeddings and different Semantic features as part of of Task 3'''
+def task3_semantic_features(str encoder_file_path,str encoder_type):
+'''This script takes in an encoder file path and computes R2 scores between embeddings and different Semantic features as part of of Task 3. 
+Script requires encoder type that can take values of 
+"ssl" : supervised encoder
+"supervised": supervised encoder
+"NMF": Non negative matrix factorization
+"PCA: PCA  
+'''
     if encoder_type == 'ssl':
         ssl_encoder = 1
         unsupervised = 0
@@ -243,8 +249,8 @@ def task3_semantic_features(encoder_file_path,encoder_type):
 if __name  == 'main':
     parser = argparse.ArgumentParser(description='flags for training')
     parser.add_argument('--encoder_path', default=" ",
-                        help='encoder file path. Required for encoder type SSL, supervised ')
+                        help='encoder file path. Required for encoder of types  SSL and supervised ')
     parser.add_argument('--encoder_type', default="ssl", required = True,
-                        help='encoder type: Options SSL, supervised, PCA, NMF')
+                        help='encoder type: One of  SSL, supervised, PCA, NMF')
     args = parser.parse_args()
     task3_semantic_features(args.encoder_path,args.encoder_type)
