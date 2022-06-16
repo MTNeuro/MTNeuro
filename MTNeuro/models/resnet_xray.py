@@ -37,3 +37,13 @@ class resnet_xray(nn.Module):
             return nn.Linear(self.representation_size, output_dim)
         else:
             return nn.Linear(self.representation_size, 1)
+
+class combine_model(nn.Module):
+    def __init__(self, encoder, classifier):
+        super().__init__()
+        self.encoder = encoder
+        self.classifier = classifier
+    def forward(self, x):
+        x = self.encoder(x)
+        x = self.classifier(x)
+        return x
