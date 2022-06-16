@@ -1,4 +1,3 @@
-from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import *
 import numpy as np
 from self_supervised.data.datasets import BrainRegionDatasetInfer
@@ -8,6 +7,10 @@ from self_supervised.utils import set_random_seeds, console
 from self_supervised.data import prepare_views
 from self_supervised import transforms
 from sklearn.decomposition import PCA, NMF
+import torch
+from torch.utils.data import DataLoader
+import torch.multiprocessing as mp
+import torch.nn.functional as F
 
 
 
@@ -40,7 +43,7 @@ def get_latents(cut_out_data,encoder_file_path,ssl=1):
     return test_embeddings
     
 def get_unsup_latents(cut_out_data,pca = 1):
-'''get latents for unsupervised methods. PCA = 1 for PCA, PCA = 0 for NMF'''
+    '''get latents for unsupervised methods. PCA = 1 for PCA, PCA = 0 for NMF'''
     dataset_test = BrainRegionDatasetInfer( cut_out_data,  train = False, edge_prob = 0, tresize=128)
     test_transform = transforms.xray.get_xray_transform([], 'xray')
     test_loader = DataLoader(dataset_test , batch_size=4*2*2048, num_workers=4, shuffle=False,  drop_last=False, pin_memory=True)
@@ -48,7 +51,7 @@ def get_unsup_latents(cut_out_data,pca = 1):
         print(x.shape)
         train_x = torch.reshape(x, (11520,64*64)).numpy()
     if pca == 1:
-    	print('fitting PCA')
+        print('fitting PCA')
         pca = PCA(n_components=256)
         pca.fit(train_x)
         test_embeddings = pca.transform(test_x)

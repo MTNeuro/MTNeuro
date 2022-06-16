@@ -16,9 +16,9 @@ from sklearn.neural_network import MLPRegressor
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
 import argparse
-
+import umap
 def task3_semantic_features(encoder_file_path,encoder_type):
-#'''This script takes in an encoder file path and computes R2 scores between embeddings and different Semantic features as part of of Task 3.  Script requires encoder type that can take values of  ssl" : supervised encoder . supervised": supervised encoder .  Non negative matrix factorization'''
+    '''This script takes in an encoder file path and computes R2 scores between embeddings and different Semantic features as part of of Task 3.  Script requires encoder type that can take values of  ssl" : supervised encoder . supervised": supervised encoder .  Non negative matrix factorization'''
     if encoder_type == 'ssl':
         ssl_encoder = 1
         unsupervised = 0
@@ -129,8 +129,7 @@ def task3_semantic_features(encoder_file_path,encoder_type):
     cmap = cm.get_cmap('tab20')
     fig, ax = plt.subplots(figsize=(8,8))
     num_categories = 4
-    title_font = 35
-    pdb.set_trace()
+    title_font = 35 
     for lab in range(num_categories):
         indices =  label_array==lab
         ax.scatter(pca_proj[indices,0],pca_proj[indices,1], c=np.array(cmap(lab)).reshape(1,4), label = class_list[lab] ,alpha=0.8)
@@ -240,7 +239,7 @@ def task3_semantic_features(encoder_file_path,encoder_type):
 
 
 
-if __name  == 'main':
+if __name__  == '__main__':
     parser = argparse.ArgumentParser(description='flags for training')
     parser.add_argument('--encoder_path', default=" ",
                         help='encoder file path. Required for encoder of types  SSL and supervised ')

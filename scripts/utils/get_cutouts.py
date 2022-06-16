@@ -1,6 +1,6 @@
 from intern.remote.boss import BossRemote
 from intern.resource.boss.resource import *
-
+import numpy as np
 
 def get_cutout_data(xrange, yrange, zrange, name='region', save=True):
     '''fetching both raw images as well as annotated data for cutout data ranges'''
