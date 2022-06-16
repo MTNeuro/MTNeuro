@@ -14,10 +14,13 @@ New models can be tested on the training set-up provided in this repo. In order 
 - All existing models can be seen instantiated in the 'models' section of the `task2_main.py` script.
 - Add another if-block here that checks for the model name (that was specified in the model configuration file created). 
 - Under this if-block instantiate the model of interest by specifying the configurations required by it. 
-_Note that the values specified in the model configuration file can be accessed here through the `network_config` dictionary variable_.
-_Also, don't forget to add `.to(device)` while instantiating the model if you wish to run it on GPU_ 
+
+	_Note that the values specified in the model configuration file can be accessed here through the `network_config` dictionary variable_.
+
+	_Also, don't forget to add `.to(device)` while instantiating the model if you wish to run it on GPU_ 
 - After the above steps, the training can be run like so:
 	>python3 task2_main.py --task task2.json --network UNet_2D.json
 
 	Instead of `UNet_2D.json`, specify the model configuration file that was created for the model of interest.
-_If your model takes 3D input then use `task2_3D.json` instead of `task2.json`_.
+	
+	_If your model takes 3D input then use `task2_3D.json` instead of `task2.json`_.
