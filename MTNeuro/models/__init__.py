@@ -1,0 +1,1 @@
+from .resnet_xray_classifier import resnet_xray_classifier
