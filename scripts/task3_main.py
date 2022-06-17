@@ -1,5 +1,6 @@
 import os
-import sys 
+import sys
+import json
 import torch
 import math
 from torch.utils.data import DataLoader
@@ -8,16 +9,17 @@ import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from utils.features import extract_cell_stats,extract_axon_stats,extract_blood_stats
-from utils.get_cutouts import get_cutout_data
-from utils.latents import get_latents, get_unsup_latents
+from MTNeuro.annots.features import extract_cell_stats,extract_axon_stats,extract_blood_stats
+from MTNeuro.annots.get_cutouts import get_cutout_data
+from MTNeuro.annots.latents import get_latents, get_unsup_latents
 from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
 import argparse
 import umap
-def task3_semantic_features(encoder_file_path,encoder_type):
+
+def task3_semantic_features(encoder_file_path,encoder_type,config_file):
     '''This script takes in an encoder file path and computes R2 scores between embeddings and different Semantic features as part of of Task 3.  Script requires encoder type that can take values of  ssl" : supervised encoder . supervised": supervised encoder .  Non negative matrix factorization'''
     if encoder_type == 'ssl':
         ssl_encoder = 1
@@ -34,13 +36,22 @@ def task3_semantic_features(encoder_file_path,encoder_type):
     else:
         print("Incorrectly specified encoder type")
 
+    
+    jsonFile = open(config_file, 'r')
+    slices = json.load(jsonFile)
+    jsonFile.close()    
+
     'Specify cutout coordinates'
-    xrange_list = [[3700,3956], [4600,4856],[3063,3319],[1543,1799]]
-    yrange_list = [[500,756],[900,1156],[850,1106],[650,906]]
-    class_list = ["striatum","Cortex","VP","ZI"]
-    zrange = [110,470]
+
+    xrange_list = [slices['xrange_cor'],slices['xrange_stri'],slices['xrange_vp'],slices['xrange_zi']]
+    yrange_list = [slices['yrange_cor'],slices['yrange_stri'],slices['yrange_vp'],slices['yrange_zi']]
+    class_list = ["Cortex","Striatum","VP","ZI"]
+    zrange = slices['zrange']
 
 
+    boss_dict = {}
+    boss_dict['image_chan']=slices['image_chan']
+    boss_dict['annotation_chan'] = slices['annotation_chan']
 
     data_array_raw = []
     data_array_anno = []
@@ -69,6 +80,7 @@ def task3_semantic_features(encoder_file_path,encoder_type):
     stats_axon = extract_axon_stats(np.copy(data_array_anno))
 
     print('Extracting blood stats...')
+
     stats_blood = extract_blood_stats(np.copy(data_array_anno))
 
 
@@ -245,5 +257,8 @@ if __name__  == '__main__':
                         help='encoder file path. Required for encoder of types  SSL and supervised ')
     parser.add_argument('--encoder_type', default="ssl", required = True,
                         help='encoder type: One of  SSL, supervised, PCA, NMF')
+    parser.add_argument('--config_file', default="./../MTNeuro/taskconfig/task3.json", required = False,
+                        help='json config  file for slices')
+ 
     args = parser.parse_args()
-    task3_semantic_features(args.encoder_path,args.encoder_type)
+    task3_semantic_features(args.encoder_path,args.encoder_type,args.config_file)
