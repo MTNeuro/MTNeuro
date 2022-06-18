@@ -13,6 +13,6 @@
     "in_channels": 1,
     "classes": 4,
     "outputdir": "outputs",
-    "outweightfilename": "ResNet18",
+    "outweightfilename": "ResNet18"
     
 }

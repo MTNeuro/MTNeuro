@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from torch.utils import data
 import pathlib 
-from trainer import Trainer
+from MTNeuro.trainer import Trainer
 from torchvision import transforms
 import json as json
-from bossdbdataset import BossDBDataset
+from MTNeuro.bossdbdataset import BossDBDataset
 from datetime import datetime
 import argparse
 import os
 from tqdm import tqdm 
-import models
+import MTNeuro.models
 from sklearn.metrics import confusion_matrix
 
 def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
@@ -57,7 +57,7 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
     # models
     if network_config["model"] == "ResNet-18":
         print('loading ResNet18 model')
-        model = models.resnet_xray_classifier(
+        model = MTNeuro.models.resnet_xray_classifier(
                 resnet_model = 'resnet18',
                 depth=network_config['in_channels'],
                 num_classes=network_config['classes'],
@@ -65,7 +65,7 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
 
     if network_config["model"] == "ResNet-50":
         print('loading ResNet50 model')
-        model = models.resnet_xray_classifier(
+        model = MTNeuro.models.resnet_xray_classifier(
                 resnet_model = 'resnet50',
                 depth=network_config['in_channels'],
                 num_classes=network_config['classes'],
@@ -158,9 +158,9 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
 if __name__ == '__main__':
     # usage python3 task1_sup.py --task taskconfig/task1.json --network networkconfig/ResNet18_2D.json --boss boss_config.json
     parser = argparse.ArgumentParser(description='flags for training')
-    parser.add_argument('--task', default="taskconfig/task1.json",
+    parser.add_argument('--task', default="MTNeuro/taskconfig/task1.json",
                         help='task config json file')
-    parser.add_argument('--network', default="networkconfig/SUP_ResNet-18_2D.json",
+    parser.add_argument('--network', default="MTNeuro/networkconfig/SUP_ResNet-18_2D.json",
                         help='network config json file')
     parser.add_argument('--boss', 
                         help='boss config json file')

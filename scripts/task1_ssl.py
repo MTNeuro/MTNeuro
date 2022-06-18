@@ -5,19 +5,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 from torch.utils import data
 import pathlib 
-from trainer import Trainer
+from MTNeuro.trainer import Trainer
 from torchvision import transforms
 import json as json
-from bossdbdataset import BossDBDataset
+from MTNeuro.bossdbdataset import BossDBDataset
 from datetime import datetime
 import argparse
 import os
 from tqdm import tqdm 
-from self_supervised.trainer import BYOLTrainer, MYOWTrainer, MYOWTrainerMerged
-from self_supervised.data import prepare_views
-from models import resnet_xray, combine_model
-from self_supervised.transforms import xray
-from self_supervised.utils import console
+from MTNeuro.self_supervised.trainer import BYOLTrainer, MYOWTrainer, MYOWTrainerMerged
+from MTNeuro.self_supervised.data import prepare_views
+from MTNeuro.models import resnet_xray, combine_model
+from MTNeuro.self_supervised.transforms import xray
+from MTNeuro.self_supervised.utils import console
 from sklearn.metrics import confusion_matrix
 
 def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
@@ -283,9 +283,9 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
 if __name__ == '__main__':
     # usage python3 task1_ssl.py --task taskconfig/task1.json --network networkconfig/SSL_BYOL_ResNet-18_2D.json --boss boss_config.json
     parser = argparse.ArgumentParser(description='flags for training')
-    parser.add_argument('--task', default="taskconfig/task1.json",
+    parser.add_argument('--task', default="MTNeuro/taskconfig/task1.json",
                         help='task config json file')
-    parser.add_argument('--network', default="networkconfig/SSL_BYOL_ResNet-18_2D.json",
+    parser.add_argument('--network', default="MTNeuro/networkconfig/SSL_BYOL_ResNet-18_2D.json",
                         help='network config json file')
     parser.add_argument('--boss', 
                         help='boss config json file')

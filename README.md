@@ -58,9 +58,10 @@ Seperate cutouts are provided for each task and for each split (training, valida
 
 ## Training Scripts
 Code for executing training and evaluation for baseline networks are provided for each task in the [`scripts`](scripts/) folder. 
-* Task 1: task1_ssl.py, task1_sup.py
+* Task 1: task1_ssl.py, task1_sup.py (a CUDA enabled graphics card is required for training)
 * Task 2: task2_main.py
 * Task 3: task3_main.py
+
 These can all be run as `scripts\script_name` from the main repository folder.
 
 These can be reconfigured for different networks using the configuration files in [`networkconfig`](MTNeuro/networkconfig/).

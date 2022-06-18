@@ -1,6 +1,4 @@
 import numpy as np
-import skimage
-import nrrd
 from skimage import measure
 from sklearn import metrics
 from sklearn.neighbors import kneighbors_graph, KDTree

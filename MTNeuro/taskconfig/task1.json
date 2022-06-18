@@ -1,5 +1,5 @@
 {
-    "name": "task2",
+    "name": "task1",
     "image_chan": "bossdb://prasad/prasad2020/image", 
     "annotation_chan": "bossdb://prasad/prasad_analysis/roi_labels",
     "xrange_cor": [4600,4856],
