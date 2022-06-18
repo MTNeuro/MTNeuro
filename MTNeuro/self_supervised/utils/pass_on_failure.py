@@ -1,6 +1,7 @@
 import logging
 
-from self_supervised.utils import you_only_log_once
+
+from MTNeuro.self_supervised.utils import you_only_log_once
 
 log = logging.getLogger(__name__)
 yolo = you_only_log_once(traceback=1)  # the caller only uses this once

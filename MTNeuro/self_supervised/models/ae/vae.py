@@ -1,8 +1,7 @@
 import torch
 from torch import nn
 
-from self_supervised.models.mlp import MLP
-
+from MTNeuro.self_supervised.models.mlp import MLP
 
 class VAE(nn.Module):
     def __init__(self, latent_dim, data_dim, hidden_dims, activation=nn.ReLU(True)):

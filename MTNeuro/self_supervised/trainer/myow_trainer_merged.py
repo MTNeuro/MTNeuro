@@ -8,12 +8,12 @@ try:
 except ImportError:
     torch_geometric = None
 
-from self_supervised.utils.console import console
-from self_supervised.models import MYOW
-from self_supervised.trainer import BYOLTrainer
-from self_supervised.utils.tensorboard import NamedTupleWrapper
-from self_supervised import visualization
-from self_supervised.utils import suppress_logs, pass_on_failure
+from MTNeuro.self_supervised.utils.console import console
+from MTNeuro.self_supervised.models import MYOW
+from MTNeuro.self_supervised.trainer import BYOLTrainer
+from MTNeuro.self_supervised.utils.tensorboard import NamedTupleWrapper
+from MTNeuro.self_supervised import visualization
+from MTNeuro.self_supervised.utils import suppress_logs, pass_on_failure
 
 
 log = logging.getLogger(__name__)

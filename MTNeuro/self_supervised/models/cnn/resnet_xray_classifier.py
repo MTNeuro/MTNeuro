@@ -38,7 +38,6 @@ class resnet_xray_classifier(nn.Module):
         
 
     def forward(self, x):
-        # print(x.size())
         y = self.f(x)
         return y#.view(y.size(0), -1)
 

@@ -9,7 +9,7 @@ try:
 except ImportError:
     torch_geometric = None
 
-from self_supervised.utils.console import console
+from MTNeuro.self_supervised.utils.console import console
 
 log = logging.getLogger(__name__)
 

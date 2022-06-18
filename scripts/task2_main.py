@@ -8,7 +8,6 @@ from torchvision.transforms import ToTensor
 import numpy as np
 from torch.utils import data
 import pathlib 
-# files copied from https://github.com/johschmidt42/PyTorch-2D-3D-UNet-Tutorial
 from trainer import Trainer
 from torchvision import transforms
 import json as json
@@ -22,7 +21,7 @@ from tqdm import tqdm
 import segmentation_models_pytorch as smp
 from torchsummary import summary
 
-#This was necessary to overcome an SSL cert error when downloading pretrained weights for SMP- your milelage may vary here
+#This was necessary to overcome an SSL cert error when downloading pretrained weights for SMP baselines- your milelage may vary here
 ssl._create_default_https_context = ssl._create_unverified_context
 
 def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
@@ -59,10 +58,6 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
 
 
     x, y = next(iter(training_dataloader))
-
-    #print(f'x = shape: {x.shape}; type: {x.dtype}')
-    #print(f'x = min: {x.min()}; max: {x.max()}')
-    #print(f'y = shape: {y.shape}; class: {y.unique()}; type: {y.dtype}')
 
     # device
     if torch.cuda.is_available():

@@ -10,12 +10,12 @@ import torch
 import torch.distributed as dist
 from torch.utils.tensorboard import SummaryWriter
 
-from self_supervised.utils.console import console
-from self_supervised.models import BYOL, MLP3
-from self_supervised.loss import CosineLoss
-from self_supervised.utils.tensorboard import NamedTupleWrapper
-from self_supervised.utils import pass_on_failure
-from self_supervised.trainer import Trainer, ScheduleExtension, OptimizerSelectExtension
+from MTNeuro.self_supervised.utils.console import console
+from MTNeuro.self_supervised.models import BYOL, MLP3
+from MTNeuro.self_supervised.loss import CosineLoss
+from MTNeuro.self_supervised.utils.tensorboard import NamedTupleWrapper
+from MTNeuro.self_supervised.utils import pass_on_failure
+from MTNeuro.self_supervised.trainer import Trainer, ScheduleExtension, OptimizerSelectExtension
 
 
 log = logging.getLogger(__name__)

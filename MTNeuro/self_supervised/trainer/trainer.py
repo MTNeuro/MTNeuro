@@ -11,8 +11,8 @@ from torch.utils.tensorboard import SummaryWriter
 from torch.optim import SGD, Adam, AdamW
 from torch.nn.parallel import DistributedDataParallel as DDP
 
-from self_supervised.optim import LARS
-from self_supervised.utils import you_only_log_once
+from MTNeuro.self_supervised.optim import LARS
+from MTNeuro.self_supervised.utils import you_only_log_once
 
 
 from abc import ABC

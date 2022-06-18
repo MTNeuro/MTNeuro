@@ -10,7 +10,7 @@ try:
 except:
     torch_geometric = None
 
-from self_supervised.utils import NotTestedError
+from MTNeuro.self_supervised.utils import NotTestedError
 
 
 class DropFeatures:

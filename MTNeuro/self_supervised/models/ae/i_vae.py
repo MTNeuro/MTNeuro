@@ -1,7 +1,8 @@
 import torch
 from torch import nn
 
-from self_supervised.models.mlp import MLP
+
+from MTNeuro.self_supervised.models.mlp import MLP
 
 
 class iVAE(nn.Module):
