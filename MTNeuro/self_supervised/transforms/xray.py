@@ -99,7 +99,7 @@ def get_xray_transform(transform_name_list, name=None, image_size=IMAGE_SIZE, p 
         This function is intended to select a subset of transformations for ablation purposes.
     """
     
-    transforms= XrayAugmentationPipeline(transform_name_list, name, int(image_size), p, same_on_batch, dataset_type)
+    transforms= XrayAugmentationPipeline(transform_name_list, name, image_size, p, same_on_batch, dataset_type)
     return transforms
     
 def get_xray_transform_seg(transform_name_list, name=None, image_size=IMAGE_SIZE, p = 0.5):

@@ -1,6 +1,8 @@
 # dataset class for our dataset which is hosted on bossdb
 # the array function comes from intern, which we use to interface with bossdb
 # This dataset supports up to 4 regions, but each region must have the same size z,y,x cutout. 
+from __future__ import annotations
+from pyrsistent import m
 from torch.utils.data import Dataset
 from intern import array
 import numpy as np
@@ -219,7 +221,20 @@ class BossDBDataset(Dataset):
             self.combine_ax_and_bg = 1
         else:
             self.combine_ax_and_bg = 0
-    
+        self.task1 = True if task_config["name"] == 'task1' else False
+    def _get_img_label(self, mask):
+        roi_label = torch.mode(mask.flatten())[0]
+        if roi_label == 1 or roi_label == 0:
+            img_label = 0
+        elif roi_label == 2 or roi_label == 8:
+            img_label = 1
+        elif roi_label == 3 or roi_label == 4:
+            img_label = 2
+        elif roi_label == 5 or roi_label == 6 or roi_label == 7:
+            img_label = 3
+        label = torch.LongTensor(0)
+        label = img_label
+        return label
     def __getitem__(self, key):
         z, y, x = self.centroid_list[key]
         z = int(z)
@@ -248,7 +263,10 @@ class BossDBDataset(Dataset):
         else:
             image_array = torch.permute(image_array,(1,2,0))
             mask_array = torch.permute(torch.squeeze(mask_array),(1,0))
-        
+
+        if self.task1:
+            mask_array = self._get_img_label(mask_array)
+
         if self.combine_ax_and_bg:
             threeclass_mask_array = np.where(mask_array==3, 0, mask_array)
             return image_array, threeclass_mask_array

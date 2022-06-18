@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 
+
 from MTNeuro.self_supervised.models.mlp import MLP
 
 

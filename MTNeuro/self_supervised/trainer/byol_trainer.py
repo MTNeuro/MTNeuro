@@ -72,7 +72,7 @@ class BYOLTrainer(Trainer, ScheduleExtension, OptimizerSelectExtension):
                  projector_output_size=None,
                  projector_hidden_size=None,
                  different_init=False,
-                 symmetric_loss,
+                 symmetric_loss=True,
                  train_dataloader,
                  transform=None,
                  transform_1=None,
