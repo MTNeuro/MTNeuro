@@ -10,3 +10,4 @@ matplotlib
 numpy
 
 intern
+umap-learn
