@@ -1,0 +1,18 @@
+{
+    "seed":0, 
+    "task_type": "supervised",
+
+    "optimizer": "SGD",
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "learning_rate": 0.01,
+    "epochs": 1,
+    "batch_size": 8,
+    "augmentations": 0,
+    "model": "ResNet-18",  
+    "in_channels": 1,
+    "classes": 4,
+    "outputdir": "outputs",
+    "outweightfilename": "ResNet18",
+    
+}
