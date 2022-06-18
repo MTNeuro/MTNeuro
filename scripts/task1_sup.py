@@ -1,31 +1,20 @@
 #!/usr/bin/env python
 
 import torch
-from typing import Tuple, List
-from torch.utils.data import Dataset
 import matplotlib.pyplot as plt
-from torchvision.transforms import ToTensor
 import numpy as np
 from torch.utils import data
 import pathlib 
-# files copied from https://github.com/johschmidt42/PyTorch-2D-3D-UNet-Tutorial
 from trainer import Trainer
 from torchvision import transforms
 import json as json
 from bossdbdataset import BossDBDataset
-# from unet import UNet
 from datetime import datetime
 import argparse
 import os
-import ssl
 from tqdm import tqdm 
-import segmentation_models_pytorch as smp
 import models
-from torchsummary import summary
-
-
-#This was necessary to overcome an SSL cert error when downloading pretrained weights for SMP- your milelage may vary here
-ssl._create_default_https_context = ssl._create_unverified_context
+from sklearn.metrics import confusion_matrix
 
 def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
     torch.manual_seed(network_config['seed'])
@@ -59,13 +48,6 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
                                         batch_size=network_config['batch_size'],
                                         shuffle=False)
 
-
-    x, y = next(iter(training_dataloader))
-
-    #print(f'x = shape: {x.shape}; type: {x.dtype}')
-    #print(f'x = min: {x.min()}; max: {x.max()}')
-    #print(f'y = shape: {y.shape}; class: {y.unique()}; type: {y.dtype}')
-
     # device
     if torch.cuda.is_available():
         device = torch.device(gpu)
@@ -97,8 +79,6 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
         print('loading ViT model')
         model = None
 
-    
-
     # criterion
     criterion = torch.nn.CrossEntropyLoss()
 
@@ -108,7 +88,6 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
     if network_config["optimizer"] == "Adam":
         optimizer = torch.optim.Adam(model.parameters(), lr=network_config["learning_rate"], betas=(network_config["beta1"],network_config["beta2"]))
     
-    # trainer (I changed the epochs to 5 just to make it run faster)
     trainer = Trainer(model=model,
                     device=device,
                     criterion=criterion,
@@ -125,7 +104,6 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
 
     # save the model
     date = datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p")
-    # model_name =  network_config['outweightfilename'] + '_' + task_config['task_type'] + '_' + date + '.pt'
     model_name =  network_config['outweightfilename'] + '_' + task_config['task_type'] + '_' + date + '.pt'
 
     os.makedirs(pathlib.Path.cwd() / network_config['outputdir'], exist_ok = True) 
@@ -154,102 +132,35 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
         out_argmax = torch.argmax(out, dim=1)  # perform softmax on outputs
         return out_argmax
 
+
+    # Test
     batch_iter = tqdm(enumerate(test_dataloader), 'test', total=len(test_dataloader), leave=False)
-    # predict the segmentations of test set
-    tp_tot = torch.empty(0,network_config['classes'])
-    fp_tot = torch.empty(0,network_config['classes'])
-    fn_tot = torch.empty(0,network_config['classes'])
-    tn_tot = torch.empty(0,network_config['classes'])
+    num_classes = network_config['classes']
+    correct = 0
+    total = 0
+    confusion = torch.zeros(num_classes,num_classes)
 
-    # first compute statistics for true positives, false positives, false negative and
-    # true negative "pixels"
     for i, (x, y) in batch_iter:
-        #input, target = x.to(device), y.to(device)  # send to device (GPU or CPU)
-        target = y.to(device) #can do this on CPU
-
+        label = y.to(device) #can do this on CPU
         with torch.no_grad():
-            # get the output image
-            output = predict(x, model, device)
-            tp, fp, fn, tn = smp.metrics.get_stats(output, target, mode='multiclass', num_classes = network_config['classes'])
-            tp_tot = torch.vstack((tp_tot,tp))
-            fp_tot = torch.vstack((fp_tot,fp))
-            fn_tot = torch.vstack((fn_tot,fn))
-            tn_tot = torch.vstack((tn_tot,tn))
+            pred_class = predict(x, model, device)
+            correct += pred_class.eq(label.view_as(pred_class)).sum().item()
+            total += len(label)
+            confusion += confusion_matrix(label.cpu(), pred_class.cpu(), labels=[0,1,2,3])
+    acc = correct/total
+    confusion = confusion.detach().cpu().numpy()
+    print('Accuracy: {}'.format(acc))
+    print('Confusion Matrix: ')
+    print(confusion)
 
-
-    # then compute metrics with required reduction (see metric docs)
-    model_name = model_name[:len(model_name)-19] + '_report.rpt'
-    rh = open(pathlib.Path.cwd() / network_config['outputdir'] / model_name, 'w')
- 
-    #Accuracy Per Class
-    accuracy = smp.metrics.accuracy(tp_tot, fp_tot, fn_tot, tn_tot, reduction='none')
-    per_class = torch.mean(accuracy,dim=0)
-    print('old Accuracy per Class:')
-    print(np.array(per_class))
-    rh.write('old Accuracy per Class:\n')
-    rh.write(str(np.array(per_class))+'\n')
-
-
-    #BAL accuracy (average across non background classes)
-    bal_accuracy = torch.mean(torch.mean(accuracy[:,1:network_config['classes']],dim=0))
-    print(f'old Balanced accuracy (No background): {bal_accuracy}')
-    rh.write(f'old Balanced accuracy (No background): {bal_accuracy}\n')
-
-    #F1 and IoU
-    if network_config['eval_reduction']=='None':
-        #F1 score
-        f1_score = smp.metrics.f1_score(tp_tot, fp_tot, fn_tot, tn_tot, reduction=None)
-        f1_score = f1_score.sum(0)/len(f1_score)
-        print(f'old F1-score: {np.array(f1_score)} Avg. F1-score: {f1_score.mean()}')
-        rh.write(f'old F1-score: {np.array(f1_score)} Avg. F1-score: {f1_score.mean()}\n')
-        iou_score = smp.metrics.iou_score(tp_tot, fp_tot, fn_tot, tn_tot, reduction=None)
-        iou_score = iou_score.sum(0)/len(iou_score)
-        print(f'old IoU: {np.array(iou_score)} Avg. IoU-score: {iou_score.mean()}')
-        rh.write(f'old IoU: {np.array(iou_score)} Avg. IoU-score: {iou_score.mean()}')
-    else:
-        #F1 score
-        f1_score = smp.metrics.f1_score(tp_tot, fp_tot, fn_tot, tn_tot, reduction=network_config['eval_reduction'])
-        print(f'old F1-score: {f1_score}')
-        rh.write(f'old F1-score: {f1_score}\n')
-
-        iou_score = smp.metrics.iou_score(tp_tot, fp_tot, fn_tot, tn_tot, reduction=network_config['eval_reduction'])
-        print(f'old IoU: {iou_score}') 
-        rh.write(f'old IoU: {iou_score}')
-
-    print('\n\n')
-    rh.write('\n\n')
-
-    acc = (tp_tot.mean(dim=0)+tn_tot.mean(dim=0))/(fp_tot.mean(dim=0)+tn_tot.mean(dim=0)+fn_tot.mean(dim=0)+tp_tot.mean(dim=0))
-    print('new Accuracy per Class:')
-    print(np.array(acc.cpu()))
-    rh.write('new Accuracy per Class:\n')
-    rh.write(str(np.array(acc.cpu())))
-    
-    spec =  (tn_tot[:,1:].mean())/(fp_tot[:,1:].mean()+tn_tot[:,1:].mean())
-    sens =  (tp_tot[:,1:].mean())/(fn_tot[:,1:].mean()+tp_tot[:,1:].mean())
-    balacc = (spec + sens)/2
-    print(f'new Balanced accuracy (No background): {balacc}')
-    rh.write(f'new Balanced accuracy (No background): {balacc}\n')
-    
-    prec = tp_tot.mean(dim=0)/(fp_tot.mean(dim=0)+tp_tot.mean(dim=0))
-    reca = tp_tot.mean(dim=0)/(fn_tot.mean(dim=0)+tp_tot.mean(dim=0))
-    f1 = (2*reca*prec)/(reca+prec)
-    print(f'new F1-score: {np.array(f1.cpu())} Avg. F1-score: {f1.mean()}')
-    rh.write(f'new F1-score: {np.array(f1.cpu())} Avg. F1-score: {f1.mean()}\n')
-
-    iou = (tp_tot.mean(0))/(fp_tot.mean(0)+fn_tot.mean(0)+tp_tot.mean(0))
-    print(f'new IoU: {np.array(iou_score.cpu())} Avg. IoU-score: {iou_score.mean()}')
-    rh.write(f'new IoU: {np.array(iou_score.cpu())} Avg. IoU-score: {iou_score.mean()}\n')
-
-    rh.close()
 
 
 if __name__ == '__main__':
-    # usage python3 task2_2D_smp_main.py --task task2.json --network network_config_smp.json --boss boss_config.json
+    # usage python3 task1_sup.py --task taskconfig/task1.json --network networkconfig/ResNet18_2D.json --boss boss_config.json
     parser = argparse.ArgumentParser(description='flags for training')
     parser.add_argument('--task', default="taskconfig/task1.json",
                         help='task config json file')
-    parser.add_argument('--network', default="networkconfig/ResNet18_2D.json",
+    parser.add_argument('--network', default="networkconfig/SUP_ResNet-18_2D.json",
                         help='network config json file')
     parser.add_argument('--boss', 
                         help='boss config json file')
