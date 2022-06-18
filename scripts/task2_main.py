@@ -8,11 +8,11 @@ from torchvision.transforms import ToTensor
 import numpy as np
 from torch.utils import data
 import pathlib 
-from trainer import Trainer
+from MTNeuro.models.unet import UNet
+from MTNeuro.trainer import Trainer
 from torchvision import transforms
 import json as json
-from bossdbdataset import BossDBDataset
-from unet import UNet
+from MTNeuro.bossdbdataset import BossDBDataset
 from datetime import datetime
 import argparse
 import os
@@ -286,9 +286,9 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
 if __name__ == '__main__':
     # usage python3 task2_2D_smp_main.py --task task2.json --network network_config_smp.json --boss boss_config.json
     parser = argparse.ArgumentParser(description='flags for training')
-    parser.add_argument('--task', default="task_configs/task2.json",
+    parser.add_argument('--task', default="MTNeuro/taskconfig/task2.json",
                         help='task config json file')
-    parser.add_argument('--network', default="network_configs/UNet_2D.json",
+    parser.add_argument('--network', default="MTNeuro/networkconfig/UNet_2D.json",
                         help='network config json file')
     parser.add_argument('--boss', 
                         help='boss config json file')

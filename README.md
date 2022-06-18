@@ -23,13 +23,14 @@ pip install -e ./
 ```
 The code has been tested with
 * Python >= 3.8
+* PIP == 22.1.2
 * torch == 1.11.0
 * torchvision == 0.12.0
 * numpy == 1.19.3
 
 To get started running examples, files in the scripts directory can be run following this example
 ```
-python3 task2_main.py
+python3 scripts/task2_main.py
 ```
 and will load default configuration scripts and public authetication credentials. The training script will output trained network weights as a 'pt' file, and produce output figures. 
 
@@ -60,6 +61,7 @@ Code for executing training and evaluation for baseline networks are provided fo
 * Task 1: task1_ssl.py, task1_sup.py
 * Task 2: task2_main.py
 * Task 3: task3_main.py
+These can all be run as `scripts\script_name` from the main repository folder.
 
 These can be reconfigured for different networks using the configuration files in [`networkconfig`](MTNeuro/networkconfig/).
 

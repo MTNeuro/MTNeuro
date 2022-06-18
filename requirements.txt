@@ -11,3 +11,6 @@ numpy
 
 intern
 umap-learn
+
+segmentation-models-pytorch
+torchsummary
