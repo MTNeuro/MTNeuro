@@ -90,7 +90,7 @@ def task3_semantic_features(encoder_file_path,encoder_type,config_file):
     'get results for different encoders'
     if encoder_type == 'ssl' or encoder_type == 'supervised':
         embeddings = get_latents(data_array_raw,encoder_file_path,ssl_encoder)
-    elif encoder_type == 'unsupervised':
+    elif encoder_type == 'PCA' or encoder_type == 'NMF':
         embeddings = get_unsup_latents(data_array_raw,set_pca)
 
 
