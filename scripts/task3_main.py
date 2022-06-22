@@ -257,7 +257,7 @@ if __name__  == '__main__':
                         help='encoder file path. Required for encoder of types  SSL and supervised ')
     parser.add_argument('--encoder_type', default="ssl", required = True,
                         help='encoder type: One of  SSL, supervised, PCA, NMF')
-    parser.add_argument('--config_file', default="./../MTNeuro/taskconfig/task3.json", required = False,
+    parser.add_argument('--config_file', default="MTNeuro/taskconfig/task3.json", required = False,
                         help='json config  file for slices')
  
     args = parser.parse_args()
