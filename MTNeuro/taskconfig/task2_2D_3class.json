@@ -1,5 +1,5 @@
 {
-    "name": "task2",
+    "name": "task2_2D_3class",
     "image_chan": "bossdb://prasad/prasad2020/image", 
     "annotation_chan": "bossdb://prasad/prasad_analysis/pixel_labels",
     "xrange_cor": [4600,4856],
@@ -22,7 +22,7 @@
 
     "tile_size": [256,256],
     
-    "task_type": "normal",
-    "combine_ax_and_bg": 0,
+    "task_type": "3class",
+    "combine_ax_and_bg": 1,
     "noZI": 0
 }
