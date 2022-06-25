@@ -104,7 +104,7 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
 
     # save the model
     date = datetime.now().strftime("%Y_%m_%d-%I:%M:%S_%p")
-    model_name =  network_config['outweightfilename'] + '_' + task_config['task_type'] + '_' + date + '.pt'
+    model_name =  network_config['outweightfilename'] + '_' + network_config['task_type'] + '_' + date + '.pt'
 
     os.makedirs(pathlib.Path.cwd() / network_config['outputdir'], exist_ok = True) 
     torch.save(model.state_dict(), pathlib.Path.cwd() / network_config['outputdir'] / model_name)

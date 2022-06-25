@@ -50,17 +50,17 @@ def get_unsup_latents(cut_out_data,pca = 1):
     dataset_test = BrainRegionDatasetInfer( cut_out_data,  train = False, edge_prob = 0, tresize=128)
     test_transform = transforms.xray.get_xray_transform([], 'xray')
     test_loader = DataLoader(dataset_test , batch_size=4*2*2048, num_workers=4, shuffle=False,  drop_last=False, pin_memory=True)
-    for x, _ in train_loader:
-        print(x.shape)
-        train_x = torch.reshape(x, (11520,64*64)).numpy()
+    for x, _ in test_loader:
+        x_shape = x.shape
+        test_x = torch.reshape(x, (x_shape[0],64*64)).numpy()
     if pca == 1:
         print('fitting PCA')
         pca = PCA(n_components=256)
-        pca.fit(train_x)
+        pca.fit(test_x)
         test_embeddings = pca.transform(test_x)
     elif pca == 0:
         print('Fitting NMF')
         nmf = NMF(n_components=256, init='random',verbose=True)
-        nmf.fit(train_x)
+        nmf.fit(test_x)
         test_embeddings = nmf.transform(test_x)
     return test_embeddings

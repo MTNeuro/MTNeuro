@@ -90,7 +90,7 @@ def task3_semantic_features(encoder_file_path,encoder_type,config_file):
     'get results for different encoders'
     if encoder_type == 'ssl' or encoder_type == 'supervised':
         embeddings = get_latents(data_array_raw,encoder_file_path,ssl_encoder)
-    elif encoder_type == 'unsupervised':
+    elif encoder_type == 'PCA' or encoder_type == 'NMF':
         embeddings = get_unsup_latents(data_array_raw,set_pca)
 
 
@@ -257,7 +257,7 @@ if __name__  == '__main__':
                         help='encoder file path. Required for encoder of types  SSL and supervised ')
     parser.add_argument('--encoder_type', default="ssl", required = True,
                         help='encoder type: One of  SSL, supervised, PCA, NMF')
-    parser.add_argument('--config_file', default="./../MTNeuro/taskconfig/task3.json", required = False,
+    parser.add_argument('--config_file', default="MTNeuro/taskconfig/task3.json", required = False,
                         help='json config  file for slices')
  
     args = parser.parse_args()

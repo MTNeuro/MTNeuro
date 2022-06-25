@@ -16,3 +16,8 @@ opencv-python
 einops
 kornia==0.6.0
 connected-components-3d
+tensorboard
+networkx
+pyrsistent
+scikit-image
+pandas
