@@ -20,5 +20,5 @@
     "z_test": [420, 470],
     "volume_z": 1,
 
-    "tile_size": [256,256]
+    "tile_size": [64,64]
 }

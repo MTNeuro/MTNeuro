@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from torch.utils import data
 import pathlib 
-from MTNeuro.trainer import Trainer
+from MTNeuro.ssl_eval_trainer import Trainer
 from torchvision import transforms
 import json as json
 from MTNeuro.bossdbdataset import BossDBDataset
@@ -35,7 +35,7 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
 
     train_data = BossDBDataset(
         task_config, boss_config, "train", image_transform = transform, mask_transform = transform)
-
+        
     val_data =  BossDBDataset(
         task_config, boss_config, "val", image_transform = transform, mask_transform = transform)
 
@@ -45,7 +45,7 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
     training_dataloader = data.DataLoader(dataset=train_data,
                                         batch_size=network_config['batch_size'],
                                         shuffle=True)
-
+                                        
     validation_dataloader = data.DataLoader(dataset=val_data,
                                         batch_size=network_config['batch_size'],
                                         shuffle=True)
@@ -77,9 +77,9 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
     # criterion
     criterion = torch.nn.CrossEntropyLoss()
 
-    train_transform = xray.get_xray_transform(network_config["transform"], name='xray', p=network_config["trans_prob"], dataset_type='2D', image_size=128)
+    train_transform = xray.get_xray_transform(network_config["transform"], name='xray', p=network_config["trans_prob"], dataset_type='2D', image_size=32)
     unnormalize = xray.get_xray_unnormalize('xray')
-    train_transform_m = xray.get_xray_transform(network_config["transform"], name='xray', p=network_config["trans_prob"], dataset_type='2D', image_size=128)
+    train_transform_m = xray.get_xray_transform(network_config["transform"], name='xray', p=network_config["trans_prob"], dataset_type='2D', image_size=32)
     
     if network_config["method"] == 'byol':
         trainer = BYOLTrainer(encoder=encoder,
@@ -228,6 +228,7 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
                     lr_scheduler=None,
                     epochs=network_config["epochs"],
                     epoch=0,
+                    transform = train_transform,
                     notebook=False)
     training_losses, validation_losses, lr_rates = trainer.run_trainer()
     # save the model
@@ -269,7 +270,22 @@ def train_model(task_config,network_config,boss_config=None,gpu='cuda'):
     for i, (x, y) in batch_iter:
         label = y.to(device) #can do this on CPU
         with torch.no_grad():
-            pred_class = predict(x, model, device)
+            pred_class = predict(x[...,:32,:32], model, device)
+            correct += pred_class.eq(label.view_as(pred_class)).sum().item()
+            total += len(label)
+            confusion += confusion_matrix(label.cpu(), pred_class.cpu(), labels=[0,1,2,3])
+            
+            pred_class = predict(x[...,:32,-32:], model, device)
+            correct += pred_class.eq(label.view_as(pred_class)).sum().item()
+            total += len(label)
+            confusion += confusion_matrix(label.cpu(), pred_class.cpu(), labels=[0,1,2,3])
+            
+            pred_class = predict(x[...,-32:,:32], model, device)
+            correct += pred_class.eq(label.view_as(pred_class)).sum().item()
+            total += len(label)
+            confusion += confusion_matrix(label.cpu(), pred_class.cpu(), labels=[0,1,2,3])
+            
+            pred_class = predict(x[...,-32:,-32:], model, device)
             correct += pred_class.eq(label.view_as(pred_class)).sum().item()
             total += len(label)
             confusion += confusion_matrix(label.cpu(), pred_class.cpu(), labels=[0,1,2,3])
