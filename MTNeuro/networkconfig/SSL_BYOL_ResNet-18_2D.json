@@ -12,7 +12,7 @@
     "task_type": "SSL",
     "method": "byol",
     "ssl_optimizer": "sgd",
-    "ssl_epochs": 10,
+    "ssl_epochs": 800,
     "projector_hidden_size": 4096,
     "projector_output_size": 256,
     "projector_2_hidden_size": 1024,
@@ -36,7 +36,7 @@
     "beta1": 0.9,
     "beta2": 0.999,
     "learning_rate": 0.01,
-    "epochs": 10,
+    "epochs": 100,
     "batch_size": 8
     
 

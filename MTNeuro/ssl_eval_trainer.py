@@ -11,7 +11,8 @@ class Trainer:
                  training_DataLoader: torch.utils.data.Dataset,
                  validation_DataLoader: torch.utils.data.Dataset = None,
                  lr_scheduler: torch.optim.lr_scheduler = None,
-                 transform = None,
+                 train_transform = None,
+                 test_transform = None,
                  epochs: int = 100,
                  epoch: int = 0,
                  notebook: bool = False
@@ -27,7 +28,8 @@ class Trainer:
         self.epochs = epochs
         self.epoch = epoch
         self.notebook = notebook
-        self.transform = transform
+        self.train_transform = train_transform
+        self.test_transform = test_transform
 
         self.training_loss = []
         self.validation_loss = []
@@ -74,8 +76,8 @@ class Trainer:
 
         for i, (x, y) in batch_iter:
             input, target = x.to(self.device), y.to(self.device)  # send to device (GPU or CPU)
-            if self.transform is not None:
-                x, y = self.transform(x, label = y)
+            if self.train_transform is not None:
+                x, y = self.train_transform(x, label = y)
             self.optimizer.zero_grad()  # zerograd the parameters
             out = self.model(input)  # one forward pass
             loss = self.criterion(out, target)  # calculate loss
@@ -105,24 +107,25 @@ class Trainer:
 
         for i, (x, y) in batch_iter:
             input, target = x.to(self.device), y.to(self.device)  # send to device (GPU or CPU)
-
+            if self.test_transform is not None:
+                x, y = self.test_transform(x, label = y)
             with torch.no_grad():
-                out = self.model(input[...,:32,:32])
+                out = self.model(input[...,:128,:128])
                 loss = self.criterion(out, target)
                 loss_value = loss.item()
                 valid_losses.append(loss_value)
                 
-                out = self.model(input[...,:32,-32:])
+                out = self.model(input[...,:128,-128:])
                 loss = self.criterion(out, target)
                 loss_value = loss.item()
                 valid_losses.append(loss_value)
                 
-                out = self.model(input[...,-32:,:32])
+                out = self.model(input[...,-128:,:128])
                 loss = self.criterion(out, target)
                 loss_value = loss.item()
                 valid_losses.append(loss_value)
                 
-                out = self.model(input[...,-32:,-32:])
+                out = self.model(input[...,-128:,-128:])
                 loss = self.criterion(out, target)
                 loss_value = loss.item()
                 valid_losses.append(loss_value)
