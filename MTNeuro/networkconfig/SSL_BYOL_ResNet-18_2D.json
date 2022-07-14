@@ -19,7 +19,7 @@
     "projector_2_output_size": 64,
     "lr_warmup_epochs": 10,
     "base_learning_rate": 0.03,
-    "base_momentum": 0.99,
+    "base_momentum": 0.996,
 
     "opt_momentum": 0.9,
     "weight_decay": 5e-4,
