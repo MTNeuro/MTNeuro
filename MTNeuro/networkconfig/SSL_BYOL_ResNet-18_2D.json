@@ -18,8 +18,8 @@
     "projector_2_hidden_size": 1024,
     "projector_2_output_size": 64,
     "lr_warmup_epochs": 10,
-    "base_learning_rate": 0.02,
-    "base_momentum": 0.99,
+    "base_learning_rate": 0.03,
+    "base_momentum": 0.996,
 
     "opt_momentum": 0.9,
     "weight_decay": 5e-4,
@@ -36,7 +36,7 @@
     "beta1": 0.9,
     "beta2": 0.999,
     "learning_rate": 0.01,
-    "epochs": 10,
+    "epochs": 100,
     "batch_size": 8
     
 
